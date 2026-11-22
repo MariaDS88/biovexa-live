@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Ефір · BioVexa AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1419; --panel:#141e25; --panel2:#1a262e; --line:#24333d;
+    --text:#f4ede2; --muted:#93a3ad; --teal:#1fc7b6; --teal-d:#11968a;
+    --red1:#ff4b55; --red2:#ff7a3d; --gold:#ffc861;
+    --r:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--text);font:15px/1.45 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+  a{color:var(--teal)}
+
+  /* header */
+  .top{display:flex;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid var(--line);background:#0b1115}
+  .logo{display:flex;align-items:center;gap:10px;white-space:nowrap;font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;font-size:17px;letter-spacing:.3px}
+  .logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--teal),#0d7f9b);display:grid;place-items:center;font-style:normal;font-size:14px}
+  .logo small{font:600 11px Manrope,system-ui,sans-serif;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-left:4px}
+  .top .sp{flex:1}
+  .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;font-weight:700;font-size:12px;letter-spacing:.8px;text-transform:uppercase;background:var(--panel2);color:var(--muted)}
+  .pill.live{background:rgba(255,75,85,.14);color:#ff7a80}
+  .pill.live b{width:8px;height:8px;border-radius:50%;background:var(--red1);animation:pulse 1.4s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,75,85,.6)}100%{box-shadow:0 0 0 9px rgba(255,75,85,0)}}
+
+  /* layout */
+  .wrap{display:grid;grid-template-columns:270px minmax(0,1fr) 360px;gap:16px;padding:16px 20px;height:calc(100vh - 57px)}
+  .col{display:flex;flex-direction:column;gap:14px;min-height:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+  .card h3{font:600 11px Manrope,system-ui,sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+
+  .host{display:flex;gap:12px;align-items:center}
+  .ava{width:54px;height:54px;border-radius:14px;object-fit:cover;background:linear-gradient(135deg,var(--teal),#0d7f9b);display:grid;place-items:center;font-weight:800;font-size:18px;flex:none}
+  .host b{display:block;font-size:15px}
+  .host span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.2px}
+
+  .tl{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .tl li{display:flex;gap:10px;align-items:flex-start;padding:8px 6px;border-radius:9px;font-size:14px;color:var(--muted)}
+  .tl li .dot{width:16px;height:16px;border-radius:50%;border:2px solid #3a4a55;flex:none;margin-top:2px;display:grid;place-items:center;font-size:10px}
+  .tl li .t{margin-left:auto;font-variant-numeric:tabular-nums;font-size:12px;opacity:.7}
+  .tl li.done{color:var(--text)}
+  .tl li.done .dot{background:var(--teal);border-color:var(--teal);color:#062a26}
+  .tl li.now{background:var(--panel2);color:var(--text)}
+  .tl li.now .dot{border-color:var(--teal);box-shadow:0 0 0 3px rgba(31,199,182,.2)}
+
+  .gifts .count{display:flex;align-items:baseline;gap:8px;margin-bottom:10px}
+  .gifts .count b{font-family:Unbounded,Manrope,system-ui,sans-serif;font-size:26px;color:var(--gold)}
+  .pips{display:flex;gap:5px;margin-bottom:12px}
+  .pips i{flex:1;height:6px;border-radius:9px;background:#2a3943}
+  .pips i.on{background:linear-gradient(90deg,var(--gold),#ff9f43)}
+  .glist{list-style:none;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+  .glist li{display:flex;gap:8px;align-items:center}
+  .glist li.lock{color:var(--muted)}
+  .note{font-size:12.5px;color:var(--muted);margin-top:10px}
+  .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;padding:12px 16px;border-radius:12px;font-weight:800;text-decoration:none;color:#fff;background:linear-gradient(135deg,var(--red1),var(--red2));box-shadow:0 8px 24px rgba(255,75,85,.25);transition:transform .15s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.teal{background:linear-gradient(135deg,var(--teal),var(--teal-d));box-shadow:0 8px 24px rgba(31,199,182,.2);color:#04201d}
+  .btn.full{width:100%}
+
+  /* video */
+  .stage{position:relative;background:#000;border-radius:var(--r);overflow:hidden;aspect-ratio:16/9;width:100%;max-height:calc(100vh - 160px);border:1px solid var(--line)}
+  .stage #player,.stage iframe{position:absolute;inset:0;width:100%;height:100%}
+  .shield{position:absolute;inset:0;z-index:2}
+  .screen{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px;background:radial-gradient(ellipse at 30% 20%,#173a3a 0%,#0d1419 60%)}
+  .screen h1{font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;font-size:clamp(20px,3vw,34px);max-width:760px;line-height:1.2}
+  .screen p{color:var(--muted);max-width:520px}
+  .cd{display:flex;gap:10px;margin:6px 0}
+  .cd div{background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:12px;padding:10px 14px;min-width:70px}
+  .cd b{display:block;font-family:Unbounded,Manrope,system-ui,sans-serif;font-size:28px;font-variant-numeric:tabular-nums}
+  .cd span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px}
+  .unmute{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);padding:16px 24px;font-size:16px}
+  .bar{display:flex;align-items:center;gap:10px;margin-top:10px}
+  .bar .sp{flex:1}
+  .ctl{padding:9px 13px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);font-weight:700;font-size:13px}
+  .ctl:hover{border-color:#36505c}
+  .ev-title{font-weight:700;font-size:16px;margin-top:12px}
+
+  /* offer */
+  .offer{border:1.5px solid var(--red1);background:linear-gradient(180deg,rgba(255,75,85,.08),var(--panel) 60%)}
+  .offer .ttl{font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;font-size:17px;line-height:1.25;margin-bottom:10px}
+  .offer .price{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .offer .price b{font-family:Unbounded,Manrope,system-ui,sans-serif;font-size:30px}
+  .offer .price s{color:var(--muted)}
+  .offer .on{font-size:13px;color:#ffb0a3;margin-bottom:14px}
+  .offer .x{float:right;color:var(--muted);font-size:18px;line-height:1;margin:-4px -4px 0 0}
+
+  /* chat */
+  .chat{flex:1;display:flex;flex-direction:column;min-height:0;padding:0}
+  .chat h3{padding:14px 16px 0}
+  .msgs{flex:1;overflow-y:auto;padding:8px 16px 12px;display:flex;flex-direction:column;gap:9px;scroll-behavior:smooth}
+  .m{font-size:14px;line-height:1.4;word-wrap:break-word;position:relative}
+  .m .n{font-weight:700;color:var(--teal);margin-right:6px}
+  .m.mod .n{color:var(--gold)}
+  .m .badge{font-size:10px;font-weight:800;letter-spacing:1px;padding:2px 6px;border-radius:6px;background:rgba(255,200,97,.15);color:var(--gold);margin-right:6px;vertical-align:1px}
+  .m.mine .n{color:#7fd7ff}
+  .m .hide{display:none;position:absolute;right:0;top:0;color:var(--muted);font-size:12px;padding:0 4px}
+  .m:hover .hide{display:block}
+  .newmsg{position:absolute;left:50%;transform:translateX(-50%);bottom:70px;display:none}
+  .form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}
+  .form input{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:11px 12px;color:var(--text);font:inherit;outline:none}
+  .form input:focus{border-color:var(--teal)}
+  .form button{padding:0 16px;border-radius:10px;background:var(--teal);color:#04201d;font-weight:800}
+  .form button:disabled{opacity:.5}
+  .gate{padding:14px;border-top:1px solid var(--line);text-align:center;font-size:13.5px;color:var(--muted)}
+  .gate .btn{margin-top:8px}
+  .empty{color:var(--muted);font-size:13.5px;text-align:center;margin:auto 0}
+
+  .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);opacity:0;z-index:50;background:#1d2b23;border:1px solid var(--gold);color:var(--text);padding:14px 18px;border-radius:14px;font-weight:700;box-shadow:0 16px 40px rgba(0,0,0,.5);transition:.3s;max-width:92vw;text-align:center}
+  .toast.show{transform:translate(-50%,0);opacity:1}
+  .hidden{display:none!important}
+
+  /* mobile */
+  @media (max-width:1100px){
+    .wrap{grid-template-columns:minmax(0,1fr) 340px}
+    .left{grid-column:1/-1;order:3;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  }
+  @media (max-width:760px){
+    .top{padding:10px 12px}
+    .logo small{display:none}
+    .wrap{display:flex;flex-direction:column;height:auto;padding:10px 12px;gap:12px}
+    .stage{max-height:none}
+    .right{order:2}
+    .chat{height:62vh}
+    .left{order:3;display:flex}
+    .bar .ctl.fs{display:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo"><i>B</i><span id="brand">BioVexa AI</span><small>ефір</small></div>
+  <div class="sp"></div>
+  <span class="pill" id="viewers" title="Скільки людей зараз на ефірі">&#9679; <span id="vcount">1</span>&nbsp;онлайн</span>
+  <span class="pill hidden" id="livePill"><b></b><span id="liveText">В ефірі</span></span>
+</header>
+
+<main class="wrap">
+  <!-- LEFT -->
+  <aside class="col left">
+    <div class="card host">
+      <div class="ava" id="hostAva">М</div>
+      <div><b id="hostName">Марія</b><span id="hostRole">ведуча</span></div>
+    </div>
+
+    <div class="card gifts hidden" id="giftsCard">
+      <h3>Подарунки за кодові слова</h3>
+      <div class="count"><b id="gFound">0</b><span>з <span id="gTotal">0</span></span></div>
+      <div class="pips" id="gPips"></div>
+      <ul class="glist" id="gList"></ul>
+      <p class="note">Слухай ефір і пиши кодові слова в чат. Усі подарунки бот надішле після ефіру.</p>
+    </div>
+
+    <div class="card gifts hidden" id="giftsGate">
+      <h3>Подарунки</h3>
+      <p class="note" style="margin:0 0 12px">Щоб збирати подарунки за кодові слова, зайди на ефір через бота.</p>
+      <a class="btn teal full" id="gateBot" href="#" target="_blank" rel="noopener">Відкрити бота</a>
+    </div>
+
+    <div class="card hidden" id="tlCard">
+      <h3>Програма ефіру</h3>
+      <ul class="tl" id="tl"></ul>
+    </div>
+  </aside>
+
+  <!-- CENTER -->
+  <section class="col">
+    <div class="stage" id="stage">
+      <div id="player"></div>
+      <div class="shield"></div>
+      <button class="btn unmute hidden" id="unmute">Увімкнути звук</button>
+      <div class="screen" id="screen">
+        <p>Завантаження…</p>
+      </div>
+    </div>
+    <div class="bar">
+      <button class="ctl" id="soundBtn">Звук: вимк.</button>
+      <div class="sp"></div>
+      <button class="ctl fs" id="fsBtn">На весь екран</button>
+    </div>
+    <div class="ev-title" id="evTitle"></div>
+  </section>
+
+  <!-- RIGHT -->
+  <aside class="col right">
+    <div class="card offer hidden" id="offer">
+      <button class="x" id="offerX" aria-label="Згорнути">&times;</button>
+      <div class="ttl" id="oTitle"></div>
+      <div class="price"><b id="oPrice"></b><s id="oOld"></s></div>
+      <div class="on" id="oNote"></div>
+      <a class="btn full" id="oBtn" href="#" target="_blank" rel="noopener">Записатися</a>
+    </div>
+
+    <div class="card chat" style="position:relative">
+      <h3>Чат</h3>
+      <div class="msgs" id="msgs"><div class="empty" id="empty">Тут з'являться повідомлення</div></div>
+      <button class="ctl newmsg" id="newmsg">Нові повідомлення &darr;</button>
+      <form class="form hidden" id="form" autocomplete="off">
+        <input id="inp" maxlength="500" placeholder="Напиши питання або кодове слово">
+        <button id="sendBtn">Надіслати</button>
+      </form>
+      <div class="gate hidden" id="chatGate">
+        Писати в чат можна, якщо зайти через бота.
+        <br><a class="btn teal" id="chatBot" href="#" target="_blank" rel="noopener">Зайти через бота</a>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  const CFG = window.BIOVEXA || {};
+  const qs = new URLSearchParams(location.search);
+  const DEMO = qs.get('demo') === '1';
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- state ----------
+  let sb = null, ev = null, me = null, token = null, slug = qs.get('e');
+  let player = null, playerReady = false, muted = true, phase = null;
+  let lastId = 0, seen = new Set();
+  const demoWords = { 'ДЕМО': 'Демо-подарунок', 'СТОРІС': 'Сценарист сторіс' };
+
+  // ---------- helpers ----------
+  const pad = (n) => String(n).padStart(2, '0');
+  const fmt = (s) => { s = Math.max(0, Math.floor(s)); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return (h ? h + ':' : '') + pad(m) + ':' + pad(x); };
+  const toSec = (t) => String(t || '0').split(':').map(Number).reduce((a, b) => a * 60 + (b || 0), 0);
+  const store = { get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} } };
+  function toast(text) { const t = $('toast'); t.textContent = text; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 4200); }
+  const startMs = () => new Date(ev.starts_at).getTime();
+  const endMs = () => startMs() + ev.duration_min * 60000;
+  const elapsed = () => (Date.now() - startMs()) / 1000;
+
+  // ---------- boot ----------
+  async function boot() {
+    $('brand').textContent = CFG.BRAND || 'BioVexa AI';
+    ['gateBot', 'chatBot'].forEach((id) => { $(id).href = CFG.BOT_URL || '#'; });
+
+    if (DEMO) { bootDemo(); return; }
+
+    if (!CFG.SUPABASE_URL || CFG.SUPABASE_URL.includes('XXXX')) {
+      screen('<h1>Сторінку ще не налаштовано</h1><p>Заповни config.js (Supabase URL і ключ). Подивитися, як усе виглядає, можна в демо: додай ?demo=1 до адреси.</p>');
+      return;
+    }
+    sb = window.supabase.createClient(CFG.SUPABASE_URL, CFG.SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+
+    // event
+    let q = sb.from('events').select('*');
+    q = slug ? q.eq('slug', slug) : q.gte('starts_at', new Date(Date.now() - 6 * 3600e3).toISOString()).order('starts_at').limit(1);
+    const { data, error } = await q;
+    if (error || !data || !data.length) { screen('<h1>Ефір не знайдено</h1><p>Перевір посилання або візьми нове в боті.</p><a class="btn teal" href="' + (CFG.BOT_URL || '#') + '">Відкрити бота</a>'); return; }
+    ev = data[0]; slug = ev.slug;
+
+    // viewer token: from URL or remembered on this device
+    token = qs.get('t') || store.get('bv_token');
+    if (token) {
+      const r = await sb.rpc('join_event', { p_token: token, p_slug: slug });
+      if (r.data) { me = r.data; store.set('bv_token', token); } else { token = null; }
+    }
+    if (qs.get('t')) { // прибираємо токен з адресного рядка, щоб його випадково не переслали
+      history.replaceState(null, '', location.pathname + '?e=' + encodeURIComponent(slug));
+    }
+
+    renderStatic();
+    renderGifts();
+    await loadChat();
+    tick(); setInterval(tick, 1000);
+    setInterval(() => { if (!document.hidden) pollChat(); }, 3000);
+    setInterval(refreshHidden, 15000);
+    refreshOnline(); setInterval(refreshOnline, 30000);
+    if (token) setInterval(() => sb.rpc('join_event', { p_token: token, p_slug: slug }).then((r) => { if (r.data) { me = r.data; renderGifts(); } }), 60000);
+  }
+
+  // ---------- static parts ----------
+  function renderStatic() {
+    document.title = ev.title + ' · ' + (CFG.BRAND || 'BioVexa AI');
+    $('evTitle').textContent = ev.title;
+    $('hostName').textContent = ev.host_name || '';
+    $('hostRole').textContent = ev.host_role || '';
+    const ava = $('hostAva');
+    if (ev.host_photo) { const img = document.createElement('img'); img.src = ev.host_photo; img.className = 'ava'; img.alt = ''; ava.replaceWith(img); }
+    else ava.textContent = (ev.host_name || 'B').trim()[0];
+
+    const tl = Array.isArray(ev.timeline) ? ev.timeline : [];
+    if (tl.length) {
+      $('tlCard').classList.remove('hidden');
+      $('tl').innerHTML = '';
+      tl.forEach((it) => {
+        const li = document.createElement('li'); li.dataset.s = toSec(it.t);
+        li.innerHTML = '<span class="dot"></span><span class="tt"></span><span class="t"></span>';
+        li.querySelector('.tt').textContent = it.title; li.querySelector('.t').textContent = it.t;
+        $('tl').appendChild(li);
+      });
+    }
+    if (ev.offer) {
+      const o = ev.offer;
+      $('oTitle').textContent = o.title || '';
+      $('oPrice').textContent = o.price || '';
+      $('oOld').textContent = o.old_price || '';
+      $('oNote').textContent = o.note || '';
+      $('oBtn').textContent = o.button || 'Записатися';
+      $('oBtn').href = o.url || '#';
+    }
+    $('offerX').onclick = () => { $('offer').classList.add('hidden'); ev._offerClosed = true; };
+
+    if (token) $('form').classList.remove('hidden'); else $('chatGate').classList.remove('hidden');
+  }
+
+  function renderGifts() {
+    if (!token || !me) { $('giftsGate').classList.remove('hidden'); $('giftsCard').classList.add('hidden'); return; }
+    $('giftsGate').classList.add('hidden');
+    if (!me.total) { $('giftsCard').classList.add('hidden'); return; }
+    $('giftsCard').classList.remove('hidden');
+    $('gFound').textContent = me.found; $('gTotal').textContent = me.total;
+    $('gPips').innerHTML = Array.from({ length: me.total }, (_, i) => '<i class="' + (i < me.found ? 'on' : '') + '"></i>').join('');
+    const ul = $('gList'); ul.innerHTML = '';
+    (me.gifts || []).forEach((g) => { const li = document.createElement('li'); li.textContent = '✓ ' + g; ul.appendChild(li); });
+    for (let i = me.found; i < me.total; i++) { const li = document.createElement('li'); li.className = 'lock'; li.textContent = '• Кодове слово ще попереду'; ul.appendChild(li); }
+  }
+
+  // ---------- clock / phases ----------
+  function screen(html) { const s = $('screen'); s.innerHTML = html; s.classList.remove('hidden'); }
+
+  function tick() {
+    const now = Date.now();
+    const p = ev._ended ? 'after' : now < startMs() ? 'before' : now < endMs() ? 'live' : 'after';
+    if (p !== phase) { phase = p; onPhase(p); }
+
+    if (p === 'before') {
+      const s = Math.max(0, Math.floor((startMs() - now) / 1000));
+      const d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60), x = s % 60;
+      const cd = $('cd');
+      if (cd) cd.innerHTML = (d ? box(d, 'дн') : '') + box(h, 'год') + box(m, 'хв') + box(x, 'сек');
+    }
+    if (p === 'live') {
+      $('liveText').textContent = 'В ефірі ' + fmt(elapsed());
+      syncPlayer();
+    }
+    // timeline
+    const el = elapsed();
+    const items = [...document.querySelectorAll('#tl li')];
+    items.forEach((li, i) => {
+      const s = +li.dataset.s, next = items[i + 1] ? +items[i + 1].dataset.s : Infinity;
+      li.classList.toggle('done', el >= s && el >= next);
+      li.classList.toggle('now', p === 'live' && el >= s && el < next);
+      li.querySelector('.dot').textContent = (el >= s && el >= next) ? '✓' : '';
+    });
+    // offer
+    if (ev.offer && !ev._offerClosed) {
+      const show = p !== 'before' && el >= (ev.offer.show_at_min || 0) * 60;
+      $('offer').classList.toggle('hidden', !show);
+    }
+  }
+  const box = (v, l) => '<div><b>' + pad(v) + '</b><span>' + l + '</span></div>';
+
+  function onPhase(p) {
+    const when = new Date(ev.starts_at).toLocaleString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
+    if (p === 'before') {
+      $('livePill').classList.add('hidden');
+      screen('<p style="text-transform:uppercase;letter-spacing:2px;font-size:12px;font-weight:700;color:var(--teal)">Ефір почнеться ' + when + '</p><h1></h1><div class="cd" id="cd"></div><p>Не закривай сторінку: відео запуститься саме. Поки чекаємо, можна писати в чат.</p>');
+      $('screen').querySelector('h1').textContent = ev.title;
+    } else if (p === 'live') {
+      $('livePill').classList.remove('hidden');
+      $('livePill').classList.add('live');
+      startPlayer();
+    } else {
+      $('livePill').classList.remove('live');
+      $('liveText').textContent = 'Ефір завершено';
+      $('livePill').classList.remove('hidden');
+      stopPlayer();
+      const b = CFG.BOT_URL || '#';
+      screen('<h1>Ефір завершено</h1><p>' + (token ? 'Дякую, що були з нами! Протягом кількох хвилин бот надішле всі подарунки.' : 'Дякую, що були з нами! Подарунки отримують ті, хто зайшов через бота.') + '</p><a class="btn teal" href="' + b + '" target="_blank" rel="noopener">Відкрити бота</a>');
+    }
+  }
+
+  // ---------- YouTube ----------
+  function loadYT() {
+    return new Promise((res) => {
+      if (window.YT && window.YT.Player) return res();
+      window.onYouTubeIframeAPIReady = res;
+      const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(s);
+    });
+  }
+  async function startPlayer() {
+    if (!ev.youtube_id) { screen('<h1>Ефір уже йде</h1><p>Відео ще не підключене. Онови сторінку за хвилину.</p>'); return; }
+    $('screen').classList.add('hidden');
+    await loadYT();
+    if (player) return;
+    const vars = { autoplay: 1, mute: 1, controls: 0, disablekb: 1, modestbranding: 1, rel: 0, playsinline: 1, iv_load_policy: 3, fs: 0 };
+    if (ev.mode === 'recorded') vars.start = Math.floor(elapsed());
+    player = new YT.Player('player', {
+      videoId: ev.youtube_id, playerVars: vars,
+      events: {
+        onReady: () => { playerReady = true; player.mute(); player.playVideo(); $('unmute').classList.remove('hidden'); },
+        onStateChange: (e) => {
+          if (e.data === YT.PlayerState.PAUSED || (e.data === YT.PlayerState.ENDED && ev.mode === 'live')) { try { player.playVideo(); } catch (x) {} }
+          if (e.data === YT.PlayerState.ENDED && ev.mode === 'recorded') ev._ended = true;
+        }
+      }
+    });
+  }
+  function syncPlayer() {
+    if (!playerReady || ev.mode !== 'recorded') return;
+    syncPlayer._n = (syncPlayer._n || 0) + 1;
+    if (syncPlayer._n % 8) return; // раз на 8 секунд
+    try {
+      const want = elapsed(), dur = player.getDuration();
+      if (dur && want > dur + 2) { ev._ended = true; return; }
+      if (Math.abs(player.getCurrentTime() - want) > 6) player.seekTo(want, true);
+    } catch (e) {}
+  }
+  function stopPlayer() { try { if (player) player.destroy(); } catch (e) {} player = null; playerReady = false; $('unmute').classList.add('hidden'); const st = $('stage'); if (!$('player')) { const d = document.createElement('div'); d.id = 'player'; st.prepend(d); } }
+
+  function setMuted(m) {
+    muted = m;
+    if (playerReady) { try { if (m) player.mute(); else { player.unMute(); player.setVolume(100); player.playVideo(); } } catch (e) {} }
+    $('soundBtn').textContent = m ? 'Звук: вимк.' : 'Звук: увімк.';
+    $('unmute').classList.toggle('hidden', !m || !playerReady);
+  }
+  $('unmute').onclick = () => setMuted(false);
+  $('soundBtn').onclick = () => setMuted(!muted);
+  $('fsBtn').onclick = () => { const s = $('stage'); if (document.fullscreenElement) document.exitFullscreen(); else if (s.requestFullscreen) s.requestFullscreen(); };
+
+  // ---------- chat ----------
+  const box_ = $('msgs');
+  const nearBottom = () => box_.scrollHeight - box_.scrollTop - box_.clientHeight < 80;
+  box_.addEventListener('scroll', () => { if (nearBottom()) $('newmsg').style.display = 'none'; });
+  $('newmsg').onclick = () => { box_.scrollTop = box_.scrollHeight; $('newmsg').style.display = 'none'; };
+
+  function addMsg(m, initial) {
+    if (seen.has(m.id)) return; seen.add(m.id);
+    if (m.id > lastId) lastId = m.id;
+    if (m.hidden) return;
+    $('empty') && $('empty').remove();
+    const stick = initial || nearBottom();
+    const d = document.createElement('div');
+    d.className = 'm' + (m.is_moderator ? ' mod' : '') + (me && m.name === me.name && m._mine ? ' mine' : '');
+    d.dataset.id = m.id;
+    const n = document.createElement('span'); n.className = 'n'; n.textContent = m.name + ':';
+    if (m.is_moderator) { const b = document.createElement('span'); b.className = 'badge'; b.textContent = 'ВЕДУЧА'; d.appendChild(b); }
+    d.appendChild(n); d.appendChild(document.createTextNode(m.text));
+    if (me && me.is_moderator) {
+      const h = document.createElement('button'); h.className = 'hide'; h.textContent = 'сховати';
+      h.onclick = async () => { const r = await sb.rpc('hide_message', { p_token: token, p_message_id: m.id }); if (r.data) d.remove(); };
+      d.appendChild(h);
+    }
+    box_.appendChild(d);
+    while (box_.children.length > 300) box_.removeChild(box_.firstChild);
+    if (stick) box_.scrollTop = box_.scrollHeight; else $('newmsg').style.display = 'block';
+  }
+  function hideMsg(id) { const el = box_.querySelector('[data-id="' + id + '"]'); if (el) el.remove(); }
+
+  async function loadChat() {
+    const { data } = await sb.from('messages').select('id,name,is_moderator,text,hidden,created_at').eq('event_id', ev.id).order('id', { ascending: false }).limit(150);
+    (data || []).reverse().forEach((m) => addMsg(m, true));
+  }
+  async function pollChat() {
+    const { data } = await sb.from('messages').select('id,name,is_moderator,text,hidden,created_at').eq('event_id', ev.id).gt('id', lastId).order('id').limit(100);
+    (data || []).forEach((m) => addMsg(m));
+  }
+  // Економний режим: без живого з'єднання, підтягуємо нове раз на 3 секунди
+  async function refreshHidden() {
+    const { data } = await sb.from('messages').select('id').eq('event_id', ev.id).eq('hidden', true).order('id', { ascending: false }).limit(50);
+    (data || []).forEach((m) => hideMsg(m.id));
+  }
+  async function refreshOnline() {
+    const { data } = await sb.rpc('online_count', { p_slug: slug });
+    if (typeof data === 'number') $('vcount').textContent = Math.max(1, data);
+  }
+
+  $('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const text = $('inp').value.trim(); if (!text) return;
+    $('sendBtn').disabled = true;
+    try {
+      const r = DEMO ? demoSend(text) : (await sb.rpc('send_message', { p_token: token, p_slug: slug, p_text: text })).data;
+      if (!r || !r.ok) {
+        const err = r && r.error;
+        toast(err === 'too_fast' ? 'Зачекай секунду і надішли ще раз' : err === 'closed' ? 'Чат зараз закритий' : err === 'no_access' ? 'Зайди на ефір через бота' : 'Не вдалося надіслати, спробуй ще раз');
+      } else {
+        $('inp').value = '';
+        if (!DEMO) pollChat();
+        me = Object.assign(me || {}, { found: r.found, total: r.total, gifts: r.gifts });
+        renderGifts();
+        const ng = r.new_gifts || [];
+        if (ng.length) toast('Кодове слово прийнято! Подарунок «' + ng.join('», «') + '» твій. Бот надішле його після ефіру');
+      }
+    } finally { setTimeout(() => { $('sendBtn').disabled = false; }, 1200); }
+  });
+
+  // ---------- demo ----------
+  function bootDemo() {
+    token = 'demo';
+    me = { name: 'Ти', is_moderator: false, found: 0, total: 2, gifts: [] };
+    ev = {
+      id: 'demo', slug: 'demo', title: 'Як зробити свій продукт за вечір з AI (демо)', host_name: 'Марія Довгаюк-Семенюк', host_role: 'ведуча',
+      mode: 'recorded', youtube_id: qs.get('yt') || '', starts_at: new Date(Date.now() - (+qs.get('min') || 3) * 60000).toISOString(), duration_min: 60,
+      timeline: [{ t: '00:00', title: 'Знайомство' }, { t: '05:00', title: 'Перший блок' }, { t: '20:00', title: 'Розбір кейсів' }, { t: '40:00', title: 'Питання і відповіді' }],
+      offer: { title: 'Назва твого продукту', price: '000 грн', old_price: '', note: 'Тут буде твій реальний дедлайн або умова', button: 'Записатися', url: '#', show_at_min: 0 }
+    };
+    if (qs.get('phase') === 'before') ev.starts_at = new Date(Date.now() + 3600e3 * 26 + 125000).toISOString();
+    if (qs.get('phase') === 'after') ev.starts_at = new Date(Date.now() - 3600e3 * 2).toISOString();
+    renderStatic(); renderGifts();
+    [['Модератор', 'Вітаю всіх! Пишіть, звідки ви, і кодові слова, коли їх почуєте', true], ['Оксана', 'Привіт з Луцька!'], ['Ігор', 'А запис буде?']]
+      .forEach((m, i) => addMsg({ id: i + 1, name: m[0], text: m[1], is_moderator: !!m[2] }, true));
+    tick(); setInterval(tick, 1000);
+    if (!ev.youtube_id && phase === 'live') screen('<h1>Тут буде відео</h1><p>У демо відео не підключене. Напиши в чат «ДЕМО» або «СТОРІС», щоб перевірити кодові слова.</p>');
+  }
+  let demoId = 100;
+  function demoSend(text) {
+    addMsg({ id: ++demoId, name: me.name, text, _mine: true });
+    const norm = ' ' + text.toLowerCase().replace(/[^a-z0-9а-яёіїєґ]+/g, ' ').trim() + ' ';
+    const ng = [];
+    Object.keys(demoWords).forEach((w) => { if (norm.includes(' ' + w.toLowerCase() + ' ') && !me.gifts.includes(demoWords[w])) { me.gifts.push(demoWords[w]); ng.push(demoWords[w]); } });
+    return { ok: true, found: me.gifts.length, total: 2, gifts: me.gifts, new_gifts: ng };
+  }
+
+  boot().catch((e) => { console.error(e); screen('<h1>Щось пішло не так</h1><p>Онови сторінку.</p>'); });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Подарунки з ефіру · BioVexa AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#f6efe4;--card:#fffaf2;--ink:#14232b;--muted:#5d6b72;--teal:#13a99a;--line:#e7dccb;--red1:#ff4b55;--red2:#ff7a3d}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font:16px/1.55 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:860px;margin:0 auto;padding:40px 20px 64px}
+  .logo{display:flex;align-items:center;gap:10px;font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;font-size:16px;margin-bottom:40px}
+  .logo i{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#1fc7b6,#0d7f9b);color:#fff;display:grid;place-items:center;font-style:normal;font-size:14px}
+  .kicker{font-weight:800;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--teal);margin-bottom:10px}
+  h1{font-family:Unbounded,Manrope,system-ui,sans-serif;font-weight:700;font-size:clamp(26px,5vw,40px);line-height:1.15;margin-bottom:14px}
+  .lead{color:var(--muted);max-width:620px;margin-bottom:36px}
+  .grid{display:grid;gap:16px}
+  .gift{display:grid;grid-template-columns:56px 1fr auto;gap:18px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px 22px}
+  .num{width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#1fc7b6,#0d7f9b);color:#fff;display:grid;place-items:center;font-family:Unbounded,Manrope,sans-serif;font-weight:700;font-size:20px}
+  .gift h2{font-size:18px;font-weight:800;margin-bottom:4px}
+  .gift p{color:var(--muted);font-size:14.5px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:12px 18px;border-radius:12px;font-weight:800;color:#fff;text-decoration:none;background:linear-gradient(135deg,var(--red1),var(--red2));white-space:nowrap}
+  .btn.off{background:#d9cfbf;color:#7b8790;pointer-events:none}
+  .foot{margin-top:40px;padding:22px;border-radius:18px;background:#14232b;color:#f4ede2;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .foot p{opacity:.85;font-size:15px}
+  .foot a{color:#1fc7b6;font-weight:800}
+  @media (max-width:620px){.gift{grid-template-columns:44px 1fr;padding:18px}.num{width:44px;height:44px;font-size:16px;border-radius:12px}.gift .btn{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo"><i>B</i>BioVexa AI</div>
+  <div class="kicker">Подарунки з ефіру</div>
+  <h1 id="title">Тримай усі матеріали</h1>
+  <p class="lead" id="lead">Дякую, що були на ефірі. Тут лежить усе, що я обіцяла: відкривай, зберігай і пробуй.</p>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    <p id="footText">Є питання по матеріалах? Пиши мені в Telegram.</p>
+    <a id="footLink" href="https://t.me/Maria_DovhaiukSemeniuk" target="_blank" rel="noopener">Написати Марії</a>
+  </div>
+</div>
+
+<script>
+/* =====================================================
+   РЕДАГУЙ ТІЛЬКИ ЦЕЙ БЛОК
+   title  - назва подарунка
+   text   - 1-2 речення, що всередині
+   url    - посилання (Telegraph, Google Drive, відео тощо)
+   button - напис на кнопці
+   Порожнє url = кнопка «Скоро», подарунок ще не готовий
+   ===================================================== */
+const GIFTS = [
+  { title: 'Подарунок 1', text: 'Короткий опис, що людина отримує.', url: '', button: 'Відкрити' },
+  { title: 'Подарунок 2', text: 'Короткий опис, що людина отримує.', url: '', button: 'Відкрити' },
+  { title: 'Подарунок 3', text: 'Короткий опис, що людина отримує.', url: '', button: 'Відкрити' },
+  { title: 'Подарунок 4', text: 'Короткий опис, що людина отримує.', url: '', button: 'Відкрити' },
+  { title: 'Подарунок 5', text: 'Короткий опис, що людина отримує.', url: '', button: 'Відкрити' }
+];
+/* ===================================================== */
+
+const grid = document.getElementById('grid');
+GIFTS.forEach((g, i) => {
+  const el = document.createElement('div'); el.className = 'gift';
+  el.innerHTML = '<div class="num"></div><div><h2></h2><p></p></div><a class="btn" target="_blank" rel="noopener"></a>';
+  el.querySelector('.num').textContent = i + 1;
+  el.querySelector('h2').textContent = g.title;
+  el.querySelector('p').textContent = g.text;
+  const a = el.querySelector('a');
+  if (g.url) { a.href = g.url; a.textContent = g.button || 'Відкрити'; }
+  else { a.classList.add('off'); a.textContent = 'Скоро'; }
+  grid.appendChild(el);
+});
+</script>
+</body>
+</html>
