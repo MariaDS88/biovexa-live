@@ -456,6 +456,11 @@
       const h = document.createElement('button'); h.className = 'hide'; h.textContent = 'сховати';
       h.onclick = async () => { const r = await sb.rpc('hide_message', { p_token: token, p_message_id: m.id }); if (r.data) d.remove(); };
       d.appendChild(h);
+      if (!m.is_moderator) {
+        const bn = document.createElement('button'); bn.className = 'hide'; bn.style.right = '64px'; bn.textContent = 'блок';
+        bn.onclick = async () => { if (!confirm('Заблокувати ' + m.name + '? Усі його повідомлення зникнуть.')) return; const r = await sb.rpc('ban_viewer', { p_token: token, p_message_id: m.id }); if (r.data && r.data.ok) { d.remove(); toast(m.name + ' заблоковано'); refreshHidden(); } else toast('Не вдалося заблокувати'); };
+        d.appendChild(bn);
+      }
     }
     box_.appendChild(d);
     while (box_.children.length > 300) box_.removeChild(box_.firstChild);
@@ -489,7 +494,7 @@
       const r = DEMO ? demoSend(text) : (await sb.rpc('send_message', { p_token: token, p_slug: slug, p_text: text })).data;
       if (!r || !r.ok) {
         const err = r && r.error;
-        toast(err === 'too_fast' ? 'Зачекай секунду і надішли ще раз' : err === 'closed' ? 'Чат зараз закритий' : err === 'no_access' ? 'Зайди на ефір через бота' : 'Не вдалося надіслати, спробуй ще раз');
+        toast(err === 'too_fast' ? 'Зачекай секунду і надішли ще раз' : err === 'closed' ? 'Чат зараз закритий' : err === 'no_access' ? 'Зайди на ефір через бота' : err === 'moderated' ? 'Повідомлення не пройшло модерацію' + (r.reason ? ' (' + r.reason + ')' : '') : err === 'banned' ? 'Писати в цей чат більше не можна' : 'Не вдалося надіслати, спробуй ще раз');
       } else {
         $('inp').value = '';
         if (!DEMO) pollChat();
