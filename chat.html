@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="uk"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>Чат ефіру</title>
+<style>
+body{margin:0;background:#0d1419;color:#f4ede2;font:14px/1.4 Segoe UI,system-ui,sans-serif}
+#top{position:sticky;top:0;background:#141e25;padding:8px 10px;font-size:12px;color:#93a3ad;border-bottom:1px solid #24333d}
+#top b{color:#1fc7b6}
+#m{padding:8px 10px}
+.x{margin:0 0 7px;word-wrap:break-word}
+.n{font-weight:700;color:#1fc7b6;margin-right:5px}
+.mod .n{color:#ffc861}
+.cw{background:rgba(255,200,97,.12);border-radius:6px;padding:2px 5px}
+</style></head><body>
+<div id="top">Чат: <b id="t">...</b> · онлайн <b id="o">0</b></div>
+<div id="m"></div>
+<script src="config.js"></script>
+<script>
+const C=window.BIOVEXA,H={apikey:C.SUPABASE_ANON_KEY},U=C.SUPABASE_URL+'/rest/v1/';
+const q=new URLSearchParams(location.search);let ev=null,last=0;const box=document.getElementById('m');
+async function g(p){const r=await fetch(U+p,{headers:H});return r.json()}
+async function init(){
+ const s=q.get('e');
+ const r=await g(s?'events?select=id,slug,title&slug=eq.'+encodeURIComponent(s):'events?select=id,slug,title&order=starts_at.desc&limit=1&starts_at=lte.'+new Date(Date.now()+864e5).toISOString());
+ if(!r.length){document.getElementById('t').textContent='немає ефіру';return}
+ ev=r[0];document.getElementById('t').textContent=ev.title;poll();setInterval(poll,3000);on();setInterval(on,30000)}
+async function poll(){
+ const r=await g('messages?select=id,name,text,is_moderator,hidden&event_id=eq.'+ev.id+'&id=gt.'+last+'&order=id.asc&limit=200');
+ const stick=innerHeight+scrollY>=document.body.scrollHeight-60;
+ for(const x of r){last=Math.max(last,x.id);if(x.hidden)continue;
+  const d=document.createElement('p');d.className='x'+(x.is_moderator?' mod':'');
+  const n=document.createElement('span');n.className='n';n.textContent=x.name+':';
+  const t=document.createElement('span');t.textContent=x.text;if(x.text.length<25&&x.text===x.text.toUpperCase()&&/[A-ZА-ЯІЇЄҐ]/.test(x.text))t.className='cw';
+  d.append(n,t);box.append(d)}
+ if(r.length&&stick)scrollTo(0,document.body.scrollHeight)}
+async function on(){const r=await fetch(U+'rpc/online_count',{method:'POST',headers:{...H,'Content-Type':'application/json'},body:JSON.stringify({p_slug:ev.slug})});document.getElementById('o').textContent=await r.json()}
+init();
+</script></body></html>
